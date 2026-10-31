@@ -1,0 +1,43 @@
+name: Nexus APK
+on:
+  workflow_dispatch:
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      IS_GITHUB_ACTIONS: 1
+      CHANNEL: dev
+      FLUTTER_VERSION: '3.38.5'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2.21.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          rm -rf ~/.gradle/caches
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+      - name: Install deps
+        run: |
+          make android-apk-install-deps
+          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+      - name: Prepare
+        run: make android-apk-prepare
+      - name: Build
+        run: make android-apk-release
+      - uses: actions/upload-artifact@v6
+        with:
+          name: nexus-apk
+          path: build/app/outputs/flutter-apk/*.apk
