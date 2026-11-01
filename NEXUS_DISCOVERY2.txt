@@ -1,0 +1,736 @@
+## dart files in profile, home, intro
+lib/features/home/widget/connection_button.dart
+lib/features/home/widget/eclipse_button_painter.dart
+lib/features/home/widget/empty_profiles_home_body.dart
+lib/features/home/widget/home_page.dart
+lib/features/home/widget/new_con_button.dart
+lib/features/home/widget/new_connection_button.dart
+lib/features/intro/widget/intro_page.dart
+lib/features/profile/add/add_profile_modal.dart
+lib/features/profile/add/model/free_profiles_model.dart
+lib/features/profile/add/widgets/fix_btn.dart
+lib/features/profile/add/widgets/fix_btns.dart
+lib/features/profile/add/widgets/free_btn.dart
+lib/features/profile/add/widgets/free_btns.dart
+lib/features/profile/add/widgets/loading.dart
+lib/features/profile/add/widgets/nav_bar.dart
+lib/features/profile/add/widgets/widgets.dart
+lib/features/profile/data/profile_data_mapper.dart
+lib/features/profile/data/profile_data_providers.dart
+lib/features/profile/data/profile_data_source.dart
+lib/features/profile/data/profile_parser.dart
+lib/features/profile/data/profile_path_resolver.dart
+lib/features/profile/data/profile_repository.dart
+lib/features/profile/details/json_editor.dart
+lib/features/profile/details/profile_details_notifier.dart
+lib/features/profile/details/profile_details_page.dart
+lib/features/profile/details/profile_details_state.dart
+lib/features/profile/model/profile_entity.dart
+lib/features/profile/model/profile_failure.dart
+lib/features/profile/model/profile_sort_enum.dart
+lib/features/profile/notifier/active_profile_notifier.dart
+lib/features/profile/notifier/profile_notifier.dart
+lib/features/profile/notifier/profiles_update_notifier.dart
+lib/features/profile/overview/profiles_modal.dart
+lib/features/profile/overview/profiles_notifier.dart
+lib/features/profile/overview/profiles_page.dart
+lib/features/profile/widget/profile_tile.dart
+
+## grep share, free, edit, delete, pin
+lib/features/profile/details/json_editor.dart:29:// enum _OptionItems { map, list, string, bool, num, delete, protocols, configElement }
+lib/features/profile/details/json_editor.dart:179:    "pre_shared_key": "31aIhAPwktDGpH4JDhA8GNvjFXEf/a6+UaQRyOAiyfM=",
+lib/features/profile/details/json_editor.dart:274:        "ping_timeout": "15s",
+lib/features/profile/details/json_editor.dart:289:        "ping_timeout": "15s",
+lib/features/profile/details/json_editor.dart:828:                    physics: const ClampingScrollPhysics(),
+lib/features/profile/details/json_editor.dart:922:    if (selectedItem == "delete") {
+lib/features/profile/details/json_editor.dart:1546:              value: "delete",
+lib/features/profile/details/json_editor.dart:1550:                  Icon(Icons.delete),
+lib/features/profile/details/json_editor.dart:1552:                  Text("Delete", style: TextStyle(fontSize: 14)),
+lib/features/profile/overview/profiles_notifier.dart:64:  Future<void> togglePin(ProfileEntity profile) async {
+lib/features/profile/overview/profiles_notifier.dart:65:    loggy.debug('toggling pin for profile: [${profile.id}] -> ${!profile.pinned}');
+lib/features/profile/overview/profiles_notifier.dart:66:    await _profilesRepo.setPinned(profile.id, !profile.pinned).getOrElse((err) {
+lib/features/profile/overview/profiles_notifier.dart:67:      loggy.warning('failed to toggle pin for [${profile.id}]', err);
+lib/features/profile/overview/profiles_notifier.dart:72:  Future<void> deleteProfile(ProfileEntity profile) async {
+lib/features/profile/overview/profiles_notifier.dart:77:        .deleteById(profile.id, profile.active)
+lib/features/profile/overview/profiles_notifier.dart:80:            loggy.warning('failed to delete profile', err);
+lib/features/profile/overview/profiles_notifier.dart:84:            loggy.info('successfully deleted profile, was active? [${profile.active}]');
+lib/features/profile/overview/profiles_notifier.dart:86:            ref.read(inAppNotificationControllerProvider).showSuccessToast(t.pages.profiles.msg.delete.success);
+lib/features/profile/model/profile_entity.dart:27:    // Custom IP lookup uses `ipinfo-url` in [populatedHeaders] only.
+lib/features/profile/model/profile_entity.dart:32:    @Default(false) bool pinned,
+lib/features/profile/model/profile_entity.dart:42:    @Default(false) bool pinned,
+lib/features/profile/model/profile_entity.dart:101:    /// Single extra-security mode — `warp` or `psiphon`. They share one slot
+lib/features/profile/add/model/free_profiles_model.dart:9:class FreeProfilesModel with _$FreeProfilesModel {
+lib/features/profile/add/model/free_profiles_model.dart:10:  const factory FreeProfilesModel({required List<FreeProfile> profiles}) = _FreeProfilesModel;
+lib/features/profile/add/model/free_profiles_model.dart:12:  factory FreeProfilesModel.fromJson(Map<String, Object?> json) => _$FreeProfilesModelFromJson(json);
+lib/features/profile/add/model/free_profiles_model.dart:16:class FreeProfile with _$FreeProfile {
+lib/features/profile/add/model/free_profiles_model.dart:17:  const factory FreeProfile({
+lib/features/profile/add/model/free_profiles_model.dart:24:  }) = _FreeProfile;
+lib/features/profile/add/model/free_profiles_model.dart:26:  factory FreeProfile.fromJson(Map<String, Object?> json) => _$FreeProfileFromJson(json);
+lib/features/profile/add/widgets/free_btns.dart:6:import 'package:hiddify/features/profile/add/widgets/free_btn.dart';
+lib/features/profile/add/widgets/free_btns.dart:12:class FreeBtns extends ConsumerWidget {
+lib/features/profile/add/widgets/free_btns.dart:13:  const FreeBtns({super.key, required this.scrollController});
+lib/features/profile/add/widgets/free_btns.dart:20:    final freeProfiles = ref.watch(freeProfilesNotifierProvider);
+lib/features/profile/add/widgets/free_btns.dart:21:    final freeProfilesFilteredByRegion = ref.watch(freeProfilesFilteredByRegionProvider);
+lib/features/profile/add/widgets/free_btns.dart:25:    return freeProfilesFilteredByRegion.when(
+lib/features/profile/add/widgets/free_btns.dart:32:                itemCount: freeProfiles.value!.length,
+lib/features/profile/add/widgets/free_btns.dart:35:                      MediaQuery.of(context).size.width <= BottomSheetConst.maxWidth || freeProfiles.value!.length < 2
+lib/features/profile/add/widgets/free_btns.dart:43:                  final profile = freeProfiles.value![index];
+lib/features/profile/add/widgets/free_btns.dart:44:                  return FreeBtn(
+lib/features/profile/add/widgets/free_btns.dart:45:                    freeProfile: profile,
+lib/features/profile/add/widgets/free_btns.dart:51:                          .showFreeProfileConsent(title: title, consent: consent);
+lib/features/profile/add/widgets/free_btns.dart:76:                (freeProfiles.value?.isEmpty ?? true)
+lib/features/profile/add/widgets/free_btns.dart:77:                    ? t.pages.profiles.freeSubNotFound
+lib/features/profile/add/widgets/free_btns.dart:78:                    : t.pages.profiles.freeSubNotFoundForRegion(region: ref.watch(ConfigOptions.region).name),
+lib/features/profile/add/widgets/nav_bar.dart:16:    final freeSwitch = ref.watch(freeSwitchNotifierProvider);
+lib/features/profile/add/widgets/nav_bar.dart:26:            key: const ValueKey('free'),
+lib/features/profile/add/widgets/nav_bar.dart:28:              Text(t.common.free, style: theme.textTheme.titleMedium!.copyWith(color: textColor)),
+lib/features/profile/add/widgets/nav_bar.dart:30:              Switch(value: freeSwitch, onChanged: ref.read(freeSwitchNotifierProvider.notifier).onChange),
+lib/features/profile/add/widgets/free_btn.dart:6:import 'package:hiddify/features/profile/add/model/free_profiles_model.dart';
+lib/features/profile/add/widgets/free_btn.dart:9:class FreeBtn extends ConsumerWidget {
+lib/features/profile/add/widgets/free_btn.dart:10:  const FreeBtn({super.key, required this.freeProfile, required this.onTap});
+lib/features/profile/add/widgets/free_btn.dart:12:  final FreeProfile freeProfile;
+lib/features/profile/add/widgets/free_btn.dart:44:                        isFa ? freeProfile.title.fa : freeProfile.title.en,
+lib/features/profile/add/widgets/free_btn.dart:50:                    if (freeProfile.neededFeatures != null)
+lib/features/profile/add/widgets/free_btn.dart:54:                          if (freeProfile.neededFeatures!.contains('warp_over_proxies'))
+lib/features/profile/add/widgets/free_btn.dart:56:                          if (freeProfile.neededFeatures!.contains('psiphon_over_proxies'))
+lib/features/profile/add/widgets/free_btn.dart:58:                          if (freeProfile.neededFeatures!.contains('fragment'))
+lib/features/profile/add/widgets/free_btn.dart:66:                isFa ? freeProfile.tags.fa.join(' · ') : freeProfile.tags.en.join(' · '),
+lib/features/profile/add/add_profile_modal.dart:8:import 'package:hiddify/features/profile/add/widgets/free_btns.dart';
+lib/features/profile/add/add_profile_modal.dart:24:    ref.listen(freeSwitchNotifierProvider, (_, _) {});
+lib/features/profile/add/add_profile_modal.dart:56:    final freeSwitch = ref.watch(freeSwitchNotifierProvider);
+lib/features/profile/add/add_profile_modal.dart:64:        final initial = !freeSwitch ? fullHeight : fullHeight + 180;
+lib/features/profile/add/add_profile_modal.dart:65:        var min = !freeSwitch ? fullHeight : fullHeight + 100;
+lib/features/profile/add/add_profile_modal.dart:66:        var max = !freeSwitch ? fullHeight / constraints.maxHeight : 0.85;
+lib/features/profile/add/add_profile_modal.dart:80:              if (freeSwitch) Expanded(child: FreeBtns(scrollController: scrollController)) else const Spacer(),
+lib/features/profile/notifier/profiles_update_notifier.dart:45:      loggy.debug("intro in process, skipping");
+lib/features/profile/notifier/profiles_update_notifier.dart:68:      final previousRun = DateTime.tryParse(ref.read(sharedPreferencesProvider).requireValue.getString(prefKey) ?? "");
+lib/features/profile/notifier/profiles_update_notifier.dart:94:            "skipping profile [${profile.id}] update. last successful update: [${profile.lastUpdate}] - interval: [${profile.options?.updateInterval}]",
+lib/features/profile/notifier/profiles_update_notifier.dart:102:      // Sequential on purpose: validation and the active-profile reconnect share
+lib/features/profile/notifier/profiles_update_notifier.dart:130:      await ref.read(sharedPreferencesProvider).requireValue.setString(prefKey, DateTime.now().toIso8601String());
+lib/features/profile/notifier/profile_notifier.dart:14:import 'package:hiddify/features/profile/add/model/free_profiles_model.dart';
+lib/features/profile/notifier/profile_notifier.dart:201:class FreeSwitchNotifier extends _$FreeSwitchNotifier {
+lib/features/profile/notifier/profile_notifier.dart:222:class FreeProfilesNotifier extends _$FreeProfilesNotifier {
+lib/features/profile/notifier/profile_notifier.dart:224:  Future<List<FreeProfile>> build() async {
+lib/features/profile/notifier/profile_notifier.dart:227:      'https://raw.githubusercontent.com/hiddify/hiddify-app/refs/heads/main/test.configs/free_configs',
+lib/features/profile/notifier/profile_notifier.dart:230:      return FreeProfilesModel.fromJson(jsonDecode(res.data.toString()) as Map<String, dynamic>).profiles;
+lib/features/profile/notifier/profile_notifier.dart:232:    return <FreeProfile>[];
+lib/features/profile/notifier/profile_notifier.dart:237:Future<List<FreeProfile>> freeProfilesFilteredByRegion(Ref ref) async {
+lib/features/profile/notifier/profile_notifier.dart:238:  final freeProfiles = await ref.watch(freeProfilesNotifierProvider.future);
+lib/features/profile/notifier/profile_notifier.dart:240:  return freeProfiles.where((e) => e.region.contains(region.name) || e.region.isEmpty).toList();
+lib/features/profile/widget/profile_tile.dart:171:  /// pin badge on list rows when the profile is pinned.
+lib/features/profile/widget/profile_tile.dart:185:        : profile.pinned
+lib/features/profile/widget/profile_tile.dart:186:        ? Icon(Icons.push_pin, size: 16, color: theme.colorScheme.onSurfaceVariant)
+lib/features/profile/widget/profile_tile.dart:255:      // While updating, the leading is a spinning indicator; its action is blocked.
+lib/features/profile/widget/profile_tile.dart:265:      // Transient success/failure feedback shown for 2s right after the spinner.
+lib/features/profile/widget/profile_tile.dart:311:/// A minimal, continuously spinning icon shown in the leading slot while a
+lib/features/profile/widget/profile_tile.dart:352:        title: profile.pinned ? t.common.unpin : t.common.pin,
+lib/features/profile/widget/profile_tile.dart:353:        leadingIcon: Icon(profile.pinned ? Icons.push_pin : Icons.push_pin_outlined),
+lib/features/profile/widget/profile_tile.dart:354:        onTap: () => ref.read(profilesNotifierProvider.notifier).togglePin(profile),
+lib/features/profile/widget/profile_tile.dart:368:        title: t.common.share,
+lib/features/profile/widget/profile_tile.dart:369:        leadingIcon: Icon(AdaptiveIcon(context).share),
+lib/features/profile/widget/profile_tile.dart:373:              title: t.pages.profiles.share.urlToClipboard,
+lib/features/profile/widget/profile_tile.dart:375:                final link = LinkParser.generateSubShareLink(url, name);
+lib/features/profile/widget/profile_tile.dart:387:              title: t.pages.profiles.share.showUrlQr,
+lib/features/profile/widget/profile_tile.dart:389:                final link = LinkParser.generateSubShareLink(url, name);
+lib/features/profile/widget/profile_tile.dart:397:            title: t.pages.profiles.share.jsonToClipboard,
+lib/features/profile/widget/profile_tile.dart:411:        leadingIcon: const Icon(Icons.delete_outline_rounded),
+lib/features/profile/widget/profile_tile.dart:412:        title: t.common.delete,
+lib/features/profile/widget/profile_tile.dart:416:              title: t.dialogs.confirmation.profile.delete.title,
+lib/features/profile/widget/profile_tile.dart:417:              message: t.dialogs.confirmation.profile.delete.msg,
+lib/features/profile/widget/profile_tile.dart:419:            .then((deleteConfirmed) async {
+lib/features/profile/widget/profile_tile.dart:420:              if (!deleteConfirmed) return;
+lib/features/profile/widget/profile_tile.dart:421:              await ref.read(profilesNotifierProvider.notifier).deleteProfile(profile);
+lib/features/profile/widget/profile_tile.dart:433:/// One link fills the row as a static chip. Two links share the slot and
+lib/features/profile/data/profile_data_source.dart:18:  Future<void> deleteById(String id, bool isActive);
+lib/features/profile/data/profile_data_source.dart:67:          (tbl) => OrderingTerm(expression: tbl.pinned, mode: OrderingMode.desc),
+lib/features/profile/data/profile_data_source.dart:105:        loggy.info('profile with id : [$id] deleted');
+lib/features/profile/data/profile_data_source.dart:116:  Future<void> deleteById(String id, bool isActive) async {
+lib/features/profile/data/profile_data_source.dart:118:      await (delete(profileEntries)..where((tbl) => tbl.id.equals(id))).go();
+lib/features/profile/data/profile_data_mapper.dart:25:      pinned: Value(rp.pinned),
+lib/features/profile/data/profile_data_mapper.dart:35:      pinned: Value(lp.pinned),
+lib/features/profile/data/profile_data_mapper.dart:39:  /// Note: `pinned` is intentionally omitted here so a subscription refresh
+lib/features/profile/data/profile_data_mapper.dart:40:  /// never clobbers the user's pin; pinning is changed via a dedicated update.
+lib/features/profile/data/profile_data_mapper.dart:95:        pinned: pinned,
+lib/features/profile/data/profile_data_mapper.dart:104:        pinned: pinned,
+lib/features/profile/data/profile_parser.dart:46:    'ipinfo-url',
+lib/features/profile/data/profile_parser.dart:60:    'ipinfo-url',
+lib/features/profile/data/profile_parser.dart:424:        // `ipinfo-url` stays in populatedHeaders only (not a dedicated column).
+lib/features/profile/data/profile_repository.dart:24:  TaskEither<ProfileFailure, Unit> setPinned(String id, bool pinned);
+lib/features/profile/data/profile_repository.dart:25:  TaskEither<ProfileFailure, Unit> deleteById(String id, bool isActive);
+
+## FILE lib/features/profile/add/add_profile_modal.dart
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/model/constants.dart';
+import 'package:hiddify/features/profile/add/widgets/free_btns.dart';
+import 'package:hiddify/features/profile/add/widgets/widgets.dart';
+import 'package:hiddify/features/profile/model/profile_entity.dart';
+import 'package:hiddify/features/profile/notifier/profile_notifier.dart';
+import 'package:hiddify/utils/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class AddProfileModal extends HookConsumerWidget {
+  const AddProfileModal({super.key, this.url});
+  // static const warpConsentGiven = "warp_consent_given";
+  final String? url;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(addProfileNotifierProvider).isLoading;
+    final currentWidget = ref.watch(addProfilePageNotifierProvider);
+    ref.listen(freeSwitchNotifierProvider, (_, _) {});
+    ref.listen(addProfileNotifierProvider, (previous, next) {
+      if (next case AsyncData(value: final _?)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted && context.canPop()) context.pop();
+        });
+      }
+    });
+
+    useMemoized(() async {
+      await Future.delayed(const Duration(milliseconds: 200));
+      if (url != null && context.mounted) {
+        if (isLoading) return;
+        ref.read(addProfileNotifierProvider.notifier).addClipboard(url!);
+      }
+    });
+    return SafeArea(
+      child: isLoading
+          ? const ProfileLoading()
+          : switch (currentWidget) {
+              AddProfilePages.options => const AddProfileOptions(),
+              AddProfilePages.manual => const AddProfileManual(),
+            },
+    );
+  }
+}
+
+class AddProfileOptions extends HookConsumerWidget {
+  const AddProfileOptions({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final isLoadingProfile = ref.watch(addProfileNotifierProvider).isLoading;
+    final freeSwitch = ref.watch(freeSwitchNotifierProvider);
+    final isDesktop = PlatformUtils.isDesktop;
+    final gapCount = isDesktop ? AddProfileModalConst.fixBtnsGapCountDesktop : AddProfileModalConst.fixBtnsGapCount;
+    final itemCount = isDesktop ? AddProfileModalConst.fixBtnsItemCountDesktop : AddProfileModalConst.fixBtnsItemCount;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final fixBtnsHeight = (constraints.maxWidth - AddProfileModalConst.fixBtnsGap * gapCount) / itemCount;
+        final fullHeight = fixBtnsHeight + AddProfileModalConst.navBarHeight + 32;
+        final initial = !freeSwitch ? fullHeight : fullHeight + 180;
+        var min = !freeSwitch ? fullHeight : fullHeight + 100;
+        var max = !freeSwitch ? fullHeight / constraints.maxHeight : 0.85;
+        if (isDesktop) {
+          min = initial;
+          max = initial / constraints.maxHeight;
+        }
+        return DraggableScrollableSheet(
+          initialChildSize: initial / constraints.maxHeight,
+          minChildSize: min / constraints.maxHeight,
+          maxChildSize: max,
+          expand: false,
+          builder: (context, scrollController) => Column(
+            children: [
+              const Gap(AddProfileModalConst.fixBtnsGap),
+              FixBtns(height: fixBtnsHeight),
+              if (freeSwitch) Expanded(child: FreeBtns(scrollController: scrollController)) else const Spacer(),
+              const NavBar(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class AddProfileManual extends HookConsumerWidget {
+  const AddProfileManual({super.key});
+
+  String _genSliderText(Translations t, int sliderValue) {
+    if (sliderValue == 0) {
+      return t.common.auto;
+    } else if (sliderValue < 24) {
+      return t.common.interval.hour(n: sliderValue);
+    }
+    final day = t.common.interval.day(n: sliderValue ~/ 24);
+    final hour = t.common.interval.hour(n: sliderValue % 24);
+    return '$day $hour';
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final t = ref.watch(translationsProvider).requireValue;
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final nameTextController = useTextEditingController();
+    final urlTextController = useTextEditingController();
+    final isAutoUpdateDisable = useState<bool>(false);
+    final updateInterval = useState(.0);
+    final sliderFocusNode = useFocusNode(
+      onKeyEvent: (node, event) {
+        if (KeyboardConst.verticalArrows.contains(event.logicalKey) && event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            node.previousFocus();
+          } else {
+            node.nextFocus();
+          }
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    return Form(
+      key: formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 12),
+            child: Row(
+              children: [
+                Expanded(child: Text(t.common.manually, style: theme.textTheme.headlineMedium)),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => ref.read(addProfilePageNotifierProvider.notifier).goOptions(),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: CustomTextFormField(
+              maxLines: 1,
+              controller: nameTextController,
+              validator: (value) => (value?.isEmpty ?? true) ? t.pages.profileDetails.form.emptyName : null,
+              label: t.common.name,
+              hint: t.pages.profileDetails.form.nameHint,
+            ),
+          ),
+          const Gap(16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: CustomTextFormField(
+              maxLines: 1,
+              controller: urlTextController,
+              validator: (value) => (value != null && !isUrl(value)) ? t.pages.profileDetails.form.invalidUrl : null,
+              label: t.common.url,
+              hint: t.pages.profileDetails.form.urlHint,
+            ),
+          ),
+          const Gap(12),
+          SwitchListTile.adaptive(
+            title: Text(
+              t.pages.profileDetails.form.disableAutoUpdate,
+              style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onSurface),
+            ),
+            value: isAutoUpdateDisable.value,
+            onChanged: (value) => isAutoUpdateDisable.value = value,
+          ),
+          AnimatedSize(
+            alignment: Alignment.topCenter,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: !isAutoUpdateDisable.value
+                ? Column(
+                    children: [
+                      const Divider(indent: 16, endIndent: 16),
+                      const Gap(12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                t.pages.profileDetails.form.autoUpdateInterval,
+                                style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onSurface),
+                              ),
+                            ),
+                            Text(
+                              _genSliderText(t, updateInterval.value.round()),
+                              style: theme.textTheme.labelSmall!.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Gap(4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Slider(
+                          focusNode: sliderFocusNode,
+                          value: updateInterval.value,
+                          max: 96,
+                          divisions: 96,
+                          label: updateInterval.value.round().toString(),
+                          onChanged: (double value) => updateInterval.value = value,
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    child: Text(t.common.add),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        final i = updateInterval.value.toInt();
+                        final interval = i > 0 ? i : null;
+                        await ref
+                            .read(addProfileNotifierProvider.notifier)
+                            .addManual(
+                              url: urlTextController.text.trim(),
+                              userOverride: UserOverride(
+                                name: nameTextController.text.trim(),
+                                isAutoUpdateDisable: isAutoUpdateDisable.value,
+                                updateInterval: interval,
+                              ),
+                            );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // const Gap(16),
+        ],
+      ),
+    );
+  }
+}
+
+## FILE lib/features/profile/widget/profile_tile.dart
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/model/constants.dart';
+import 'package:hiddify/core/model/failures.dart';
+import 'package:hiddify/core/model/trusted_links.dart';
+import 'package:hiddify/core/notification/in_app_notification_controller.dart';
+import 'package:hiddify/core/router/bottom_sheets/bottom_sheets_notifier.dart';
+import 'package:hiddify/core/router/dialog/dialog_notifier.dart';
+import 'package:hiddify/core/router/go_router/helper/active_breakpoint_notifier.dart';
+import 'package:hiddify/core/widget/adaptive_icon.dart';
+import 'package:hiddify/core/widget/adaptive_menu.dart';
+import 'package:hiddify/features/profile/model/profile_entity.dart';
+import 'package:hiddify/features/profile/notifier/profile_notifier.dart';
+import 'package:hiddify/features/profile/overview/profiles_notifier.dart';
+import 'package:hiddify/gen/fonts.gen.dart';
+import 'package:hiddify/utils/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:simple_icons/simple_icons.dart';
+
+class ProfileTile extends HookConsumerWidget {
+  const ProfileTile({super.key, required this.profile, this.isMain = false, this.margin = EdgeInsets.zero});
+
+  final ProfileEntity profile;
+
+  /// home screen active profile card
+  final bool isMain;
+  final EdgeInsets margin;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationsProvider).requireValue;
+    final theme = Theme.of(context);
+
+    final selectActiveMutation = useMutation(
+      initialOnFailure: (err) {
+        ref.read(inAppNotificationControllerProvider).showErrorToast(t.presentShortError(err));
+      },
+      initialOnSuccess: () {
+        if (context.mounted && context.canPop()) context.pop();
+      },
+    );
+
+    final subInfo = switch (profile) {
+      RemoteProfileEntity(:final subInfo) => subInfo,
+      _ => null,
+    };
+
+    final showActionButton = profile is RemoteProfileEntity || !isMain;
+
+    void handleTap() {
+      if (isMain) {
+        if (Breakpoint(context).isMobile()) {
+          ref.read(bottomSheetsNotifierProvider.notifier).showProfilesOverview();
+        } else {
+          context.goNamed('profiles');
+        }
+        return;
+      }
+      if (selectActiveMutation.state.isInProgress) return;
+      selectActiveMutation.setFuture(ref.read(profilesNotifierProvider.notifier).selectActiveProfile(profile.id));
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.goNamed('home');
+      }
+    }
+
+    // Provider links (profile-web-page-url / support-url) show as separate pills
+    // below the main card, for remote profiles.
+    final RemoteProfileEntity? remote = profile is RemoteProfileEntity ? profile as RemoteProfileEntity : null;
+    final bool showLinks =
+        ProfileTileConst.showProviderLinks &&
+        isMain &&
+        remote != null &&
+        ((remote.webPageUrl?.isNotEmpty ?? false) || (remote.supportUrl?.isNotEmpty ?? false));
+
+    final card = Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: profile.active ? BorderSide(color: theme.colorScheme.outline) : BorderSide.none,
+        borderRadius: showLinks ? ProfileTileConst.topOnlyBorderRadius : ProfileTileConst.cardBorderRadius,
+      ),
+      elevation: profile.active ? 0 : 1,
+      child: IntrinsicHeight(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (showActionButton) ...[
+                SizedBox(
+                  width: 48,
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(1),
+                    child: ProfileActionButton(profile, !isMain, squareBottom: showLinks),
+                  ),
+                ),
+                if (profile.active) VerticalDivider(width: 1, color: theme.colorScheme.outline) else const Gap(1),
+              ],
+              Expanded(child: _body(context, t, theme, subInfo, showActionButton, handleTap, showLinks)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return Padding(
+      padding: margin,
+      child: showLinks
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                card,
+                ProfileLinkButtons(webPageUrl: remote.webPageUrl, supportUrl: remote.supportUrl),
+              ],
+            )
+          : card,
+    );
+  }
+
+  /// The tappable content: the profile name (wrapped with a dropdown
+  /// affordance on the main card) followed by the subscription info.
+  Widget _body(
+    BuildContext context,
+    TranslationsEn t,
+    ThemeData theme,
+    SubscriptionInfo? subInfo,
+    bool showActionButton,
+    VoidCallback onTap,
+    bool squareBottom,
+  ) {
+    return Semantics(
+      button: true,
+      sortKey: isMain ? const OrdinalSortKey(0) : null,
+      focused: isMain,
+      liveRegion: isMain,
+      namesRoute: isMain,
+      label: isMain ? t.pages.profiles.viewAllProfiles : null,
+      child: InkWell(
+        borderRadius: showActionButton
+            ? ProfileTileConst.endBorderRadius(Directionality.of(context), squareBottom: squareBottom)
+            : (squareBottom ? ProfileTileConst.topOnlyBorderRadius : ProfileTileConst.cardBorderRadius),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _title(t, theme),
+              if (subInfo != null) ...[
+                const Gap(4),
+                RemainingTrafficIndicator(subInfo.ratio),
+                const Gap(4),
+                ProfileSubscriptionInfo(subInfo),
+                const Gap(4),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Profile name with a trailing affordance: a dropdown on the main card, or a
+  /// pin badge on list rows when the profile is pinned.
+  Widget _title(TranslationsEn t, ThemeData theme) {
+    final nameText = Text(
+      profile.name,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textTheme.titleMedium?.copyWith(fontFamily: PlatformUtils.isWindows ? FontFamily.emoji : null),
+      semanticsLabel: isMain || profile.active
+          ? t.pages.profiles.activeProfileName(name: profile.name)
+          : t.pages.profiles.nonActiveProfileName(name: profile.name),
+    );
+
+    final Widget? trailing = isMain
+        ? const Icon(Icons.arrow_drop_down_rounded)
+        : profile.pinned
+        ? Icon(Icons.push_pin, size: 16, color: theme.colorScheme.onSurfaceVariant)
+        : null;
+
+    if (trailing == null) return nameText;
+
+    final row = Row(
+      children: [
+        Expanded(child: nameText),
+        Padding(padding: const EdgeInsetsDirectional.only(start: 8), child: trailing),
+      ],
+    );
+    if (!isMain) return row;
+
+    // On the main card the title is wrapped so it reads as a single affordance.
+    return Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: row);
+  }
+}
+
+class ProfileActionButton extends HookConsumerWidget {
+  const ProfileActionButton(this.profile, this.showAllActions, {super.key, this.squareBottom = false});
+
+  final ProfileEntity profile;
+  final bool showAllActions;
+
+  /// Zeroes this button's bottom corner, matching the card when a link chip
+  /// is attached flush below it.
+  final bool squareBottom;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationsProvider).requireValue;
+    final update = ref.watch(updateProfileNotifierProvider(profile.id));
+    final isUpdating = update.isLoading;
+    // Success/failure flash is derived straight from the provider state, which
+    // UpdateProfileNotifier holds for 2s then resets. It lives in the provider
+    // (not widget state), so it survives the list re-sorting after an update.
+    final bool? outcome = isUpdating
+        ? null
+        : update.hasError
+        ? false
+        : (update.value != null ? true : null);
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) => FadeTransition(
+        opacity: CurvedAnimation(
+          parent: animation,
+          curve: const Interval(0, 0.6, curve: Curves.easeOut),
+          reverseCurve: Curves.easeIn,
+        ),
+        child: ScaleTransition(
+          scale: CurvedAnimation(parent: animation, curve: Curves.easeOutBack, reverseCurve: Curves.easeIn),
+          child: child,
+        ),
+      ),
+      // Expand children so the interactive leading keeps its full tap target.
+      layoutBuilder: (currentChild, previousChildren) => Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
+        children: [...previousChildren, if (currentChild != null) currentChild],
+      ),
+      child: _leading(context, ref, t, isUpdating, outcome),
+    );
+  }
+
+  /// The current leading content. Each state carries a distinct key so the
+  /// [AnimatedSwitcher] cross-fades between them.
+  Widget _leading(BuildContext context, WidgetRef ref, TranslationsEn t, bool isUpdating, bool? outcome) {
+    if (profile case RemoteProfileEntity()) {
+      // While updating, the leading is a spinning indicator; its action is blocked.
+      if (isUpdating) {
+        return Semantics(
+          key: const ValueKey('updating'),
+          label: t.pages.profiles.update,
+          liveRegion: true,
+          child: Tooltip(message: t.pages.profiles.update, child: const _UpdatingIndicator()),
+        );
+      }
+
+      // Transient success/failure feedback shown for 2s right after the spinner.
+      if (outcome case final success?) {
+        return Semantics(
+          key: ValueKey(success),
+          label: success ? t.pages.profiles.msg.update.success : t.pages.profiles.msg.update.failure,
+          liveRegion: true,
+          child: Icon(
+            success ? Icons.check_circle_outline_rounded : Icons.error_outline_rounded,
+            color: success ? Colors.green : Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+
+      if (!showAllActions) {
+        return Semantics(
+          key: const ValueKey('update'),
+          button: true,
+          child: Tooltip(
+            message: t.pages.profiles.update,
+            child: InkWell(
+              borderRadius: ProfileTileConst.startBorderRadius(Directionality.of(context), squareBottom: squareBottom),
+              onTap: () => ref
+                  .read(updateProfileNotifierProvider(profile.id).notifier)
+                  .updateProfile(profile as RemoteProfileEntity),
+              child: const Icon(Icons.sync_rounded),
+            ),
+          ),
+        );
+      }
+    }
+    return ProfileActionsMenu(profile, (context, toggleVisibility, _) {
+      return Semantics(
+        button: true,
+        child: Tooltip(
+          message: MaterialLocalizations.of(context).showMenuTooltip,
+          child: InkWell(
+
+## launcher icon config
+56:  url_launcher: ^6.2.5
+171:    - assets/images/source/ic_launcher_border.png
+191:  image: assets/images/source/ic_launcher_splash.png
+195:    image: assets/images/source/ic_launcher_foreground.png
+drawable
+drawable-hdpi
+drawable-mdpi
+drawable-v21
+drawable-xxxhdpi
+mipmap-anydpi-v26
+mipmap-hdpi
+mipmap-mdpi
+mipmap-xhdpi
+mipmap-xxhdpi
+mipmap-xxxhdpi
+values
+values-night
+values-night-v31
+values-v31
+xml
+ic_launcher.webp
+ic_launcher_round.webp
