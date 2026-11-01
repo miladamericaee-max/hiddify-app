@@ -1,0 +1,732 @@
+## android files
+android/app/build.gradle
+android/app/src/debug/AndroidManifest.xml
+android/app/src/main/AndroidManifest.xml
+android/app/src/profile/AndroidManifest.xml
+android/gradle.properties
+android/settings.gradle
+android/gradle/wrapper/gradle-wrapper.properties
+android/build.gradle
+
+## android/app/build.gradle
+
+plugins { 
+    id "com.android.application" 
+    id "org.jetbrains.kotlin.android" 
+    id "dev.flutter.flutter-gradle-plugin" 
+    id "com.google.protobuf" version "0.9.4" 
+    id "com.squareup.wire" version "5.3.1"
+}
+
+wire {
+    kotlin {
+        android = true
+    }
+    protoPath {
+        srcDir 'src/main/protos'
+    }
+    sourcePath {
+        srcDir 'src/main/protos/'
+        include '**'
+    }
+}
+
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+boolean hasKeyStore = false
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    hasKeyStore = true
+} else {
+    println "+++"
+    println "No keystore defined. The app will not be signed."
+    println "Create a android/key.properties file with the following properties:"
+    println "storePassword"
+    println "keyPassword"
+    println "keyAlias"
+    println "storeFile"
+    println "+++"
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')?: '1'
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
+android {
+    namespace 'com.hiddify.hiddify'
+    testNamespace "test.com.hiddify.hiddify"
+    compileSdkVersion 36
+    ndkVersion "28.2.13676358"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "app.hiddify.com"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include "x86_64", "armeabi-v7a", "arm64-v8a"
+
+            universalApk true
+        }
+    }
+
+    if (hasKeyStore) {
+        signingConfigs {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasKeyStore) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
+            ndk {
+                //noinspection ChromeOsAbiSupport
+                abiFilters "x86_64", "armeabi-v7a", "arm64-v8a"
+                debugSymbolLevel 'FULL'
+            }
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+        aidl true
+    }
+
+    packaging {
+        jniLibs {
+            // store native libs (mainly the Go core) compressed in the APK; Android extracts them
+            // at install. Much smaller download, slightly larger installed size and install time.
+            useLegacyPackaging = true
+        }
+    }
+
+}
+
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        output.versionCodeOverride = android.defaultConfig.versionCode
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
+    implementation "androidx.compose.ui:ui:1.7.8"
+    implementation("com.squareup.wire:wire-grpc-client:5.3.1")
+
+    implementation 'io.grpc:grpc-okhttp:1.64.0'
+    implementation 'io.grpc:grpc-protobuf-lite:1.64.0'
+    implementation 'io.grpc:grpc-stub:1.64.0'
+//    protoPath(project(':hiddify_api'))
+//    implementation project(':hiddify_api')
+
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'io.grpc:grpc-okhttp:1.64.0'
+    androidTestImplementation 'io.grpc:grpc-protobuf-lite:1.64.0'
+    androidTestImplementation 'io.grpc:grpc-stub:1.64.0'
+}
+
+## AndroidManifest (main)
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <application
+        android:name=".Application"
+        android:banner="@mipmap/ic_banner"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Hiddify"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="31">
+
+        <meta-data
+            android:name="flutter_deeplinking_enabled"
+            android:value="true" />
+
+        <meta-data
+            android:name="android.app.shortcuts"
+            android:resource="@xml/shortcuts" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
+
+
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="hiddify" />
+                <data android:scheme="v2ray" />
+                <data android:scheme="v2rayn" />
+                <data android:scheme="v2rayng" />
+                <data android:scheme="clash" />
+                <data android:scheme="clashmeta" />
+                <data android:scheme="sing-box" />
+
+                <!-- <data android:host="import" />
+                <data android:host="install-config" />
+                <data android:host="import-remote-profile" />
+                <data android:host="install-sub" /> -->
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ShortcutActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/quick_toggle"
+            android:launchMode="singleTask"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".bg.TileService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:icon="@drawable/ic_stat_logo"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="n">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+        <service
+            android:name=".bg.VPNService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="vpn" />
+            <meta-data android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
+                android:value="true"/>
+        </service>
+        <service
+            android:name=".bg.ProxyService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="proxy" />
+        </service>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+</manifest>
+## grep app.hiddify.com
+android/app/build.gradle:74:        applicationId "app.hiddify.com"
+android/app/src/main/res/xml/shortcuts.xml:11:            android:targetPackage="app.hiddify.com" />
+
+## pubspec head
+name: hiddify
+description: Cross Platform Multi Protocol Proxy Frontend.
+publish_to: "none"
+version: 5.3.0+50300
+
+environment:
+  sdk: ^3.10.4
+  # ! IMPORTANT !
+  # This SDK version is strictly required and must not be removed.
+  # It is parsed/grep-ed by Makefile and Dockerfile to configure the build environment.
+  # Ensure this matches the target Flutter version.
+  flutter: ^3.38.5
+  
+dependencies:
+  flutter:
+    sdk: flutter
+  # Debug-only, like accessibility_tools: the two lib/main*.dart entrypoints
+  # gate it behind kDebugMode, so release builds tree-shake it away.
+  flutter_driver:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+  # lucy_editor: ^1.0.5
+  # re_highlight: ^0.0.3
+  # json_editor_flutter: ^1.4.2
+
+  slang: ^4.8.1
+  slang_flutter: ^4.8.0
+  fpdart: ^1.1.0
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  hooks_riverpod: ^2.4.10
+  flutter_hooks: ^0.20.5
+  riverpod_annotation: ^2.3.4
+  rxdart: ^0.28.0
+  drift: ^2.21.0
+  drift_flutter: ^0.2.1
+  shared_preferences: ^2.5.2
+
+## lib folders
+lib
+lib/core
+lib/core/analytics
+lib/core/app_info
+lib/core/db
+lib/core/db/converters
+lib/core/db/provider
+lib/core/db/schemas
+lib/core/directories
+lib/core/haptic
+lib/core/http_client
+lib/core/localization
+lib/core/logger
+lib/core/logger/ring
+lib/core/logger/sinks
+lib/core/model
+lib/core/notification
+lib/core/preferences
+lib/core/router
+lib/core/router/adaptive_layout
+lib/core/router/bottom_sheets
+lib/core/router/deep_linking
+lib/core/router/dialog
+lib/core/router/go_router
+lib/core/theme
+lib/core/utils
+lib/core/widget
+lib/features
+lib/features/about
+lib/features/about/widget
+lib/features/app
+lib/features/app/widget
+lib/features/app_based_routing
+lib/features/app_based_routing/data
+lib/features/app_based_routing/model
+lib/features/app_based_routing/overview
+lib/features/app_update
+lib/features/app_update/data
+lib/features/app_update/model
+lib/features/app_update/notifier
+lib/features/auto_start
+lib/features/auto_start/notifier
+lib/features/chain
+lib/features/chain/model
+lib/features/chain/notifier
+lib/features/chain/overview
+lib/features/common
+lib/features/connection
+lib/features/connection/data
+lib/features/connection/model
+lib/features/connection/notifier
+lib/features/connection/widget
+lib/features/deep_link
+lib/features/deep_link/notifier
+lib/features/home
+lib/features/home/widget
+lib/features/intro
+lib/features/intro/widget
+lib/features/log
+lib/features/log/data
+lib/features/log/model
+lib/features/log/overview
+lib/features/platform_specific
+lib/features/profile
+lib/features/profile/add
+lib/features/profile/data
+lib/features/profile/details
+lib/features/profile/model
+lib/features/profile/notifier
+lib/features/profile/overview
+lib/features/profile/widget
+lib/features/proxy
+lib/features/proxy/active
+lib/features/proxy/data
+lib/features/proxy/model
+lib/features/proxy/overview
+lib/features/proxy/widget
+lib/features/route_rules
+lib/features/route_rules/notifier
+lib/features/route_rules/overview
+lib/features/route_rules/widget
+lib/features/settings
+lib/features/settings/data
+lib/features/settings/model
+lib/features/settings/notifier
+lib/features/settings/overview
+lib/features/settings/widget
+lib/features/shortcut
+lib/features/stats
+lib/features/stats/data
+lib/features/stats/model
+lib/features/stats/notifier
+lib/features/stats/widget
+lib/features/system_tray
+lib/features/system_tray/notifier
+lib/features/system_tray/widget
+lib/features/window
+lib/features/window/notifier
+lib/features/window/widget
+lib/gen
+lib/hiddifycore
+lib/hiddifycore/core_interface
+lib/hiddifycore/generated
+lib/hiddifycore/generated/extension
+lib/hiddifycore/generated/google
+lib/hiddifycore/generated/v2
+lib/singbox
+lib/singbox/model
+lib/utils
+
+## profile add functions
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:65:            title: t.dialogs.confirmation.addProfileByDeepLinkWarning.title,
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:66:            message: t.dialogs.confirmation.addProfileByDeepLinkWarning.message(host: _deepLinkHost(url)),
+lib/features/profile/add/widgets/free_btns.dart:54:                            .read(addProfileNotifierProvider.notifier)
+lib/features/profile/add/widgets/fix_btns.dart:34:            ref.read(addProfileNotifierProvider.notifier).addClipboard(cr);
+lib/features/profile/add/widgets/fix_btns.dart:58:            final notifier = ref.read(addProfileNotifierProvider.notifier);
+lib/features/profile/add/widgets/fix_btns.dart:76:              ref.read(addProfileNotifierProvider.notifier).addClipboard(cr);
+lib/features/profile/add/widgets/fix_btns.dart:87:            ref.read(addProfilePageNotifierProvider.notifier).goManual();
+lib/features/profile/add/widgets/loading.dart:28:              ref.invalidate(addProfileNotifierProvider);
+lib/features/profile/add/add_profile_modal.dart:22:    final isLoading = ref.watch(addProfileNotifierProvider).isLoading;
+lib/features/profile/add/add_profile_modal.dart:23:    final currentWidget = ref.watch(addProfilePageNotifierProvider);
+lib/features/profile/add/add_profile_modal.dart:25:    ref.listen(addProfileNotifierProvider, (previous, next) {
+lib/features/profile/add/add_profile_modal.dart:37:        ref.read(addProfileNotifierProvider.notifier).addClipboard(url!);
+lib/features/profile/add/add_profile_modal.dart:55:    // final isLoadingProfile = ref.watch(addProfileNotifierProvider).isLoading;
+lib/features/profile/add/add_profile_modal.dart:138:                  onPressed: () => ref.read(addProfilePageNotifierProvider.notifier).goOptions(),
+lib/features/profile/add/add_profile_modal.dart:228:                            .read(addProfileNotifierProvider.notifier)
+lib/features/profile/notifier/profile_notifier.dart:73:        task = _profilesRepo.upsertRemote(
+lib/features/profile/notifier/profile_notifier.dart:125:      final task = _profilesRepo.upsertRemote(url, userOverride: userOverride);
+lib/features/profile/notifier/profile_notifier.dart:162:          .upsertRemote(profile.url)
+lib/features/profile/data/profile_repository.dart:32:  TaskEither<ProfileFailure, Unit> upsertRemote(String url, {UserOverride? userOverride, CancelToken? cancelToken});
+lib/features/profile/data/profile_repository.dart:136:  TaskEither<ProfileFailure, Unit> upsertRemote(String url, {UserOverride? userOverride, CancelToken? cancelToken}) =>
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:86:  $grpc.ResponseFuture<$0.ProfileResponse> addProfile(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:90:    return $createUnaryCall(_$addProfile, request, options: options);
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:124:  static final _$addProfile = $grpc.ClientMethod<$0.AddProfileRequest, $0.ProfileResponse>(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:176:        addProfile_Pre,
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:225:  $async.Future<$0.ProfileResponse> addProfile_Pre(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:227:    return addProfile($call, await $request);
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:230:  $async.Future<$0.ProfileResponse> addProfile($grpc.ServiceCall call, $0.AddProfileRequest request);
+lib/hiddifycore/generated/v2/profile/profile_service.pbjson.dart:32:@$core.Deprecated('Use addProfileRequestDescriptor instead')
+lib/hiddifycore/generated/v2/profile/profile_service.pbjson.dart:44:final $typed_data.Uint8List addProfileRequestDescriptor =
+
+## bootstrap.dart
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hiddify/core/analytics/analytics_controller.dart';
+import 'package:hiddify/core/app_info/app_info_provider.dart';
+import 'package:hiddify/core/directories/directories_provider.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/logger/logger.dart';
+import 'package:hiddify/core/logger/logger_setup.dart';
+import 'package:hiddify/core/model/environment.dart';
+import 'package:hiddify/core/preferences/general_preferences.dart';
+import 'package:hiddify/core/preferences/preferences_migration.dart';
+import 'package:hiddify/core/preferences/preferences_provider.dart';
+import 'package:hiddify/features/app/widget/app.dart';
+import 'package:hiddify/features/auto_start/notifier/auto_start_notifier.dart';
+import 'package:hiddify/features/chain/model/chain_enum.dart';
+import 'package:hiddify/features/chain/notifier/chain_profile_notifier.dart';
+
+import 'package:hiddify/features/connection/notifier/connection_notifier.dart';
+import 'package:hiddify/features/log/data/log_data_providers.dart';
+import 'package:hiddify/features/profile/data/profile_data_providers.dart';
+import 'package:hiddify/features/profile/notifier/active_profile_notifier.dart';
+import 'package:hiddify/features/proxy/active/active_proxy_notifier.dart';
+import 'package:hiddify/features/settings/data/config_option_repository.dart';
+import 'package:hiddify/features/system_tray/notifier/system_tray_notifier.dart';
+import 'package:hiddify/features/window/notifier/window_notifier.dart';
+import 'package:hiddify/hiddifycore/hiddify_core_service_provider.dart';
+import 'package:hiddify/riverpod_observer.dart';
+import 'package:hiddify/utils/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+Future<void> lazyBootstrap(WidgetsBinding widgetsBinding, Environment env) async {
+  if (!kIsWeb) {
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  }
+  // phase 1 — console and the in-memory history, before the folders are known
+  logStart();
+  FlutterError.onError = Logger.logFlutterError;
+  WidgetsBinding.instance.platformDispatcher.onError = Logger.logPlatformDispatcherError;
+
+  final stopWatch = Stopwatch()..start();
+
+  final container = ProviderContainer(
+    overrides: [environmentProvider.overrideWithValue(env)],
+    // every provider change with its value: far too much to log by default
+    observers: [if (const bool.fromEnvironment('riverpod_log')) RiverpodObserver()],
+  );
+
+  await _init("directories", () => container.read(appDirectoriesProvider.future));
+  // phase 2 — the folders exist, so app.log can be opened
+  logAddFile(container.read(logPathResolverProvider).appFile().path);
+
+  final appInfo = await _init("app info", () => container.read(appInfoProvider.future));
+  await _init("preferences", () => container.read(sharedPreferencesProvider.future));
+  // The ring starts at a safe default and only now learns the size the user
+  // picked, since nothing could be read from disk before this point.
+  logRing.capacity = container.read(Preferences.logBufferSize);
+
+  final enableAnalytics = await container.read(analyticsControllerProvider.future);
+  if (enableAnalytics) {
+    await _init("analytics", () => container.read(analyticsControllerProvider.notifier).enableAnalytics());
+  }
+
+  await _init("preferences migration", () async {
+    try {
+      await PreferencesMigration(sharedPreferences: container.read(sharedPreferencesProvider).requireValue).migrate();
+    } catch (e, stackTrace) {
+      Logger.bootstrap.error("preferences migration failed", e, stackTrace);
+      if (env == Environment.dev) rethrow;
+      Logger.bootstrap.info("clearing preferences");
+      await container.read(sharedPreferencesProvider).requireValue.clear();
+    }
+  });
+
+  // The log level decides this now. There is no second debug switch to keep in
+  // sync, and the core reaches the same conclusion from the same value.
+  final debug = kDebugMode || container.read(ConfigOptions.logLevel).isVerbose;
+
+  if (PlatformUtils.isDesktop) {
+    await _init("window controller", () => container.read(windowNotifierProvider.future));
+
+    final silentStart = container.read(Preferences.silentStart);
+    Logger.bootstrap.debug("silent start [${silentStart ? "Enabled" : "Disabled"}]");
+    if (!silentStart) {
+      await container.read(windowNotifierProvider.notifier).show(focus: false);
+    } else {
+      Logger.bootstrap.debug("silent start, remain hidden accessible via tray");
+    }
+    await _init("auto start service", () => container.read(autoStartNotifierProvider.future));
+  }
+  // phase 3 — a log file is worth its cost on desktop, or while debugging.
+  // On a phone in release it only burns storage nobody reads.
+  await _init("logging", () async => logFinish(keepFile: debug || PlatformUtils.isDesktop));
+
+  // marks where this run begins, since the file now spans several
+  logMarkRun(appInfo.format());
+  Logger.bootstrap.info(appInfo.format());
+
+  await _init("profile repository", () => container.read(profileRepositoryProvider.future));
+
+  await _init("translations", () => container.read(translationsProvider.future));
+
+  await _safeInit("active profile", () => container.read(activeProfileProvider.future), timeout: 1000);
+  await _init(
+    "chain profile extra security",
+    () => container.read(chainProfileNotifierProvider(ChainType.extraSecurity).future),
+  );
+  await _init(
+    "chain profile unblocker",
+    () => container.read(chainProfileNotifierProvider(ChainType.unblocker).future),
+  );
+  await _safeInit("hiddify-core", () => container.read(hiddifyCoreServiceProvider).init());
+
+  // Eagerly listen to activeProxyNotifierProvider to force synchronous evaluation in microtasks,
+  // avoiding lazy build-phase flushes and sibling dependency collisions on the Home page.
+  container.listen(activeProxyNotifierProvider, (previous, next) {});
+
+  if (!kIsWeb) {
+    if (PlatformUtils.isDesktop) {
+      await _safeInit(
+        "restore previous connection",
+        () => container.read(connectionNotifierProvider.notifier).restoreConnectionOnStartup(),
+        timeout: 5000,
+      );
+      await _safeInit("system tray", () => container.read(systemTrayNotifierProvider.future), timeout: 1000);
+    }
+
+    if (PlatformUtils.isAndroid) {
+      await _safeInit("android display mode", () async {
+        await FlutterDisplayMode.setHighRefreshRate();
+      });
+    }
+  }
+
+  Logger.bootstrap.info("bootstrap took [${stopWatch.elapsedMilliseconds}ms]");
+  stopWatch.stop();
+
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: SentryUserInteractionWidget(child: const App()),
+    ),
+  );
+
+  if (!kIsWeb) {
+    FlutterNativeSplash.remove();
+  }
+  // SentryFlutter.s(DateTime.now().toUtc());
+}
+
+Future<T> _init<T>(String name, Future<T> Function() initializer, {int? timeout}) async {
+  final stopWatch = Stopwatch()..start();
+  Logger.bootstrap.info("initializing [$name]");
+  Future<T> func() => timeout != null ? initializer().timeout(Duration(milliseconds: timeout)) : initializer();
+  try {
+    final result = await func();
+    Logger.bootstrap.debug("[$name] initialized in ${stopWatch.elapsedMilliseconds}ms");
+    return result;
+  } catch (e, stackTrace) {
+    Logger.bootstrap.error("[$name] error initializing", e, stackTrace);
+    rethrow;
+  } finally {
+    stopWatch.stop();
+  }
+}
+
+Future<T?> _safeInit<T>(String name, Future<T> Function() initializer, {int? timeout}) async {
+  try {
+    return await _init(name, initializer, timeout: timeout);
+  } catch (e) {
+    return null;
+  }
+}
+
+## main.dart
+// Dev channel entrypoint. Twin file: lib/main_prod.dart, the prod channel one.
+// The Makefile picks between the two through CHANNEL, so keep them in sync.
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_driver/driver_extension.dart';
+import 'package:hiddify/bootstrap.dart';
+import 'package:hiddify/core/model/environment.dart';
+
+Future<void> main() async {
+  // Debug and profile builds that ask for it: lets an external client tap, type
+  // and scroll the app. Profile too, because the iPhone build running on a Mac
+  // only starts as a profile build. Behind a flag because the extension installs
+  // a TestTextInput that takes over the text input channel — with it on, no field
+  // in the app accepts a real keyboard. Run with --dart-define=driver=true to
+  // drive it. Never in release.
+  // Must come first: it installs the binding that ensureInitialized() reuses.
+  if (!kReleaseMode && const bool.fromEnvironment('driver')) {
+    enableFlutterDriverExtension();
+  }
+
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // final widgetsBinding = SentryWidgetsFlutterBinding.ensureInitialized();
+  // debugPaintSizeEnabled = true;
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent),
+  );
+
+  return await lazyBootstrap(widgetsBinding, Environment.dev);
+}
