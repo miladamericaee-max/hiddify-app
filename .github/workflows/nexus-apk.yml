@@ -11,6 +11,71 @@ jobs:
       FLUTTER_VERSION: '3.38.5'
     steps:
       - uses: actions/checkout@v6
+      - name: Apply Nexus patch
+        run: |
+          python3 - <<'PY'
+          import glob, json, pathlib, re
+
+          def sub(path, old, new):
+              p = pathlib.Path(path)
+              s = p.read_text(encoding='utf-8')
+              if old not in s:
+                  raise SystemExit('PATCH FAILED in ' + path + ': ' + old)
+              p.write_text(s.replace(old, new), encoding='utf-8')
+
+          sub('android/app/build.gradle', 'applicationId "app.hiddify.com"', 'applicationId "com.nexus.vpn"')
+          sub('android/app/src/main/AndroidManifest.xml', 'android:label="Hiddify"', 'android:label="Nexus"')
+          sub('android/app/src/main/res/xml/shortcuts.xml', 'android:targetPackage="app.hiddify.com"', 'android:targetPackage="com.nexus.vpn"')
+
+          DART = '''
+
+          const _nexusSubscriptionUrl =
+              'https://raw.githubusercontent.com/miladamericaee-max/configs/main/configs.txt#Nexus';
+
+          Future<void> _nexusSeed(ProviderContainer container) async {
+            try {
+              final repo = await container.read(profileRepositoryProvider.future);
+              final result = await repo.upsertRemote(_nexusSubscriptionUrl).run();
+              Logger.bootstrap.info("nexus subscription added: ${result.isRight()}");
+            } catch (e, stackTrace) {
+              Logger.bootstrap.error("nexus subscription failed", e, stackTrace);
+            }
+          }
+          '''
+
+          anchor = 'await _safeInit("hiddify-core", () => container.read(hiddifyCoreServiceProvider).init());'
+          sub('lib/bootstrap.dart', anchor, anchor + '\n\n  // NEXUS: keep our default subscription present and fresh.\n  unawaited(_nexusSeed(container));')
+          with open('lib/bootstrap.dart', 'a', encoding='utf-8') as f:
+              f.write(DART)
+
+          p = pathlib.Path('pubspec.yaml')
+          s = p.read_text(encoding='utf-8')
+          s = re.sub(r'(?m)^version: .*$', 'version: 99.0.0+99000000', s, count=1)
+          p.write_text(s, encoding='utf-8')
+
+          def walk(x):
+              if isinstance(x, dict):
+                  return {k: walk(v) for k, v in x.items()}
+              if isinstance(x, list):
+                  return [walk(v) for v in x]
+              if isinstance(x, str) and '://' not in x:
+                  return x.replace('Hiddify', 'Nexus').replace('هیدیفای', 'نکسوس')
+              return x
+
+          n = 0
+          for f in glob.glob('**/*.i18n.json', recursive=True):
+              if '/build/' in f or '.dart_tool' in f:
+                  continue
+              try:
+                  data = json.load(open(f, encoding='utf-8'))
+                  with open(f, 'w', encoding='utf-8') as fh:
+                      json.dump(walk(data), fh, ensure_ascii=False, indent=2)
+                  n += 1
+              except Exception as e:
+                  print('skip', f, e)
+          print('translations patched:', n)
+          PY
+          git diff --stat
       - uses: subosito/flutter-action@v2.21.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -39,5 +104,9 @@ jobs:
         run: make android-apk-release
       - uses: actions/upload-artifact@v6
         with:
-          name: nexus-apk
+          name: nexus-arm64
+          path: build/app/outputs/flutter-apk/*arm64*.apk
+      - uses: actions/upload-artifact@v6
+        with:
+          name: nexus-all
           path: build/app/outputs/flutter-apk/*.apk
