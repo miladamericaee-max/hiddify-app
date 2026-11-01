@@ -1,0 +1,48 @@
+name: Nexus Discovery 3
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Collect
+        run: |
+          {
+            echo "## entry points for add profile"
+            grep -rnE "showAddProfile|AddProfileModal|addProfile" lib --include=*.dart | grep -v "\.g\.dart" | grep -v "\.freezed\.dart" | head -60
+            echo
+            echo "## profile_tile.dart lines 300-460"
+            sed -n '300,460p' lib/features/profile/widget/profile_tile.dart
+            echo
+            echo "## nav_bar.dart"
+            cat lib/features/profile/add/widgets/nav_bar.dart
+            echo
+            echo "## profile_notifier.dart lines 150-260"
+            sed -n '150,260p' lib/features/profile/notifier/profile_notifier.dart
+            echo
+            echo "## profile_repository.dart"
+            sed -n '1,70p' lib/features/profile/data/profile_repository.dart
+            echo
+            echo "## home_page.dart"
+            head -200 lib/features/home/widget/home_page.dart
+            echo
+            echo "## app root files"
+            for f in $(grep -rl "MaterialApp" lib --include=*.dart | head -2); do
+              echo "## FILE $f"
+              head -160 "$f"
+              echo
+            done
+            echo "## pubspec dependencies"
+            sed -n '72,140p' pubspec.yaml
+          } > NEXUS_DISCOVERY3.txt 2>&1
+          wc -c NEXUS_DISCOVERY3.txt
+      - name: Save
+        run: |
+          git config user.name "nexus-bot"
+          git config user.email "nexus-bot@users.noreply.github.com"
+          git add NEXUS_DISCOVERY3.txt
+          git commit -m "discovery3 [skip ci]"
+          git push
