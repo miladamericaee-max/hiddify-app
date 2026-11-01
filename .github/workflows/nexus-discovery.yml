@@ -1,0 +1,48 @@
+name: Nexus Discovery
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Collect
+        run: |
+          {
+            echo "## android files"
+            find android -maxdepth 4 -type f \( -name "*.gradle" -o -name "*.kts" -o -name "AndroidManifest.xml" -o -name "strings.xml" -o -name "*.properties" \) | head -50
+            echo
+            echo "## android/app/build.gradle"
+            cat android/app/build.gradle 2>/dev/null || cat android/app/build.gradle.kts 2>/dev/null
+            echo
+            echo "## AndroidManifest (main)"
+            cat android/app/src/main/AndroidManifest.xml
+            echo
+            echo "## grep app.hiddify.com"
+            grep -rn "app.hiddify.com" android lib pubspec.yaml 2>/dev/null | head -80
+            echo
+            echo "## pubspec head"
+            head -40 pubspec.yaml
+            echo
+            echo "## lib folders"
+            find lib -maxdepth 3 -type d | sort | head -120
+            echo
+            echo "## profile add functions"
+            grep -rn "upsertRemote\|addByUrl\|addProfile\|addByContent" lib | head -60
+            echo
+            echo "## bootstrap.dart"
+            head -250 lib/bootstrap.dart 2>/dev/null
+            echo
+            echo "## main.dart"
+            head -120 lib/main.dart 2>/dev/null
+          } > NEXUS_DISCOVERY.txt 2>&1
+          wc -c NEXUS_DISCOVERY.txt
+      - name: Save
+        run: |
+          git config user.name "nexus-bot"
+          git config user.email "nexus-bot@users.noreply.github.com"
+          git add NEXUS_DISCOVERY.txt
+          git commit -m "discovery [skip ci]"
+          git push
