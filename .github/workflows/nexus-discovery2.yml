@@ -1,0 +1,37 @@
+name: Nexus Discovery 2
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Collect
+        run: |
+          {
+            echo "## dart files in profile, home, intro"
+            find lib/features/profile lib/features/home lib/features/intro -type f -name "*.dart" | sort
+            echo
+            echo "## grep share, free, edit, delete, pin"
+            grep -rniE "share|free|pin|delete" lib/features/profile lib/features/home --include=*.dart | grep -v "^.*\.g\.dart" | grep -v "freezed" | head -120
+            echo
+            for f in $(find lib/features/profile -type f -name "*.dart" | grep -E "add_profile|profile_tile|actions|popup|menu" | sort | head -8); do
+              echo "## FILE $f"
+              head -300 "$f"
+              echo
+            done
+            echo "## launcher icon config"
+            grep -n "launcher" pubspec.yaml || true
+            ls android/app/src/main/res
+            ls android/app/src/main/res/mipmap-xxxhdpi 2>/dev/null
+          } > NEXUS_DISCOVERY2.txt 2>&1
+          wc -c NEXUS_DISCOVERY2.txt
+      - name: Save
+        run: |
+          git config user.name "nexus-bot"
+          git config user.email "nexus-bot@users.noreply.github.com"
+          git add NEXUS_DISCOVERY2.txt
+          git commit -m "discovery2 [skip ci]"
+          git push
