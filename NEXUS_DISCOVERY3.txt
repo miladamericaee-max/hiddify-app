@@ -1,0 +1,861 @@
+## entry points for add profile
+lib/core/model/constants.dart:21:abstract class AddProfileModalConst {
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:58:  Future<void> showAddProfile({String? url, bool triggeredByDeepLink = false}) async {
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:65:            title: t.dialogs.confirmation.addProfileByDeepLinkWarning.title,
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:66:            message: t.dialogs.confirmation.addProfileByDeepLinkWarning.message(host: _deepLinkHost(url)),
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:69:        await _show(isScrollControlled: true, child: AddProfileModal(url: url));
+lib/core/router/bottom_sheets/bottom_sheets_notifier.dart:72:      await _show(isScrollControlled: true, child: AddProfileModal(url: url));
+lib/core/router/go_router/routing_config_notifier.dart:95:                  ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(url: url, triggeredByDeepLink: true),
+lib/core/router/go_router/routing_config_notifier.dart:102:            (_) => ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(url: url, triggeredByDeepLink: true),
+lib/features/shortcut/shortcut_wrapper.dart:65:                ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(url: captureResult);
+lib/features/profile/overview/profiles_page.dart:46:        onPressed: () async => await ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(),
+lib/features/profile/add/widgets/free_btns.dart:54:                            .read(addProfileNotifierProvider.notifier)
+lib/features/profile/add/widgets/nav_bar.dart:21:        AddProfileModalConst.navBarGap,
+lib/features/profile/add/widgets/nav_bar.dart:22:      ).copyWith(bottom: AddProfileModalConst.navBarBottomGap),
+lib/features/profile/add/widgets/fix_btns.dart:26:        const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/widgets/fix_btns.dart:34:            ref.read(addProfileNotifierProvider.notifier).addClipboard(cr);
+lib/features/profile/add/widgets/fix_btns.dart:37:        const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/widgets/fix_btns.dart:58:            final notifier = ref.read(addProfileNotifierProvider.notifier);
+lib/features/profile/add/widgets/fix_btns.dart:67:          const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/widgets/fix_btns.dart:76:              ref.read(addProfileNotifierProvider.notifier).addClipboard(cr);
+lib/features/profile/add/widgets/fix_btns.dart:80:        const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/widgets/fix_btns.dart:87:            ref.read(addProfilePageNotifierProvider.notifier).goManual();
+lib/features/profile/add/widgets/fix_btns.dart:90:        const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/widgets/loading.dart:28:              ref.invalidate(addProfileNotifierProvider);
+lib/features/profile/add/add_profile_modal.dart:15:class AddProfileModal extends HookConsumerWidget {
+lib/features/profile/add/add_profile_modal.dart:16:  const AddProfileModal({super.key, this.url});
+lib/features/profile/add/add_profile_modal.dart:22:    final isLoading = ref.watch(addProfileNotifierProvider).isLoading;
+lib/features/profile/add/add_profile_modal.dart:23:    final currentWidget = ref.watch(addProfilePageNotifierProvider);
+lib/features/profile/add/add_profile_modal.dart:25:    ref.listen(addProfileNotifierProvider, (previous, next) {
+lib/features/profile/add/add_profile_modal.dart:37:        ref.read(addProfileNotifierProvider.notifier).addClipboard(url!);
+lib/features/profile/add/add_profile_modal.dart:55:    // final isLoadingProfile = ref.watch(addProfileNotifierProvider).isLoading;
+lib/features/profile/add/add_profile_modal.dart:58:    final gapCount = isDesktop ? AddProfileModalConst.fixBtnsGapCountDesktop : AddProfileModalConst.fixBtnsGapCount;
+lib/features/profile/add/add_profile_modal.dart:59:    final itemCount = isDesktop ? AddProfileModalConst.fixBtnsItemCountDesktop : AddProfileModalConst.fixBtnsItemCount;
+lib/features/profile/add/add_profile_modal.dart:62:        final fixBtnsHeight = (constraints.maxWidth - AddProfileModalConst.fixBtnsGap * gapCount) / itemCount;
+lib/features/profile/add/add_profile_modal.dart:63:        final fullHeight = fixBtnsHeight + AddProfileModalConst.navBarHeight + 32;
+lib/features/profile/add/add_profile_modal.dart:78:              const Gap(AddProfileModalConst.fixBtnsGap),
+lib/features/profile/add/add_profile_modal.dart:138:                  onPressed: () => ref.read(addProfilePageNotifierProvider.notifier).goOptions(),
+lib/features/profile/add/add_profile_modal.dart:228:                            .read(addProfileNotifierProvider.notifier)
+lib/features/home/widget/home_page.dart:68:              onPressed: () => ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(),
+lib/features/home/widget/empty_profiles_home_body.dart:22:            onPressed: () => ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(),
+lib/features/home/widget/connection_button.dart:197:      ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile();
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:86:  $grpc.ResponseFuture<$0.ProfileResponse> addProfile(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:90:    return $createUnaryCall(_$addProfile, request, options: options);
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:124:  static final _$addProfile = $grpc.ClientMethod<$0.AddProfileRequest, $0.ProfileResponse>(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:176:        addProfile_Pre,
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:225:  $async.Future<$0.ProfileResponse> addProfile_Pre(
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:227:    return addProfile($call, await $request);
+lib/hiddifycore/generated/v2/profile/profile_service.pbgrpc.dart:230:  $async.Future<$0.ProfileResponse> addProfile($grpc.ServiceCall call, $0.AddProfileRequest request);
+lib/hiddifycore/generated/v2/profile/profile_service.pbjson.dart:32:@$core.Deprecated('Use addProfileRequestDescriptor instead')
+lib/hiddifycore/generated/v2/profile/profile_service.pbjson.dart:44:final $typed_data.Uint8List addProfileRequestDescriptor =
+
+## profile_tile.dart lines 300-460
+          child: InkWell(
+            borderRadius: ProfileTileConst.startBorderRadius(Directionality.of(context), squareBottom: squareBottom),
+            onTap: toggleVisibility,
+            child: Icon(AdaptiveIcon(context).more),
+          ),
+        ),
+      );
+    }, key: const ValueKey('menu'));
+  }
+}
+
+/// A minimal, continuously spinning icon shown in the leading slot while a
+/// remote profile is being updated.
+class _UpdatingIndicator extends StatefulWidget {
+  const _UpdatingIndicator();
+
+  @override
+  State<_UpdatingIndicator> createState() => _UpdatingIndicatorState();
+}
+
+class _UpdatingIndicatorState extends State<_UpdatingIndicator> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1))
+    ..repeat();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: ReverseAnimation(_controller),
+      child: Icon(Icons.sync_rounded, color: Theme.of(context).colorScheme.onSurface),
+    );
+  }
+}
+
+class ProfileActionsMenu extends HookConsumerWidget {
+  const ProfileActionsMenu(this.profile, this.builder, {super.key, this.child});
+
+  final ProfileEntity profile;
+  final AdaptiveMenuBuilder builder;
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationsProvider).requireValue;
+
+    final menuItems = [
+      AdaptiveMenuItem(
+        title: profile.pinned ? t.common.unpin : t.common.pin,
+        leadingIcon: Icon(profile.pinned ? Icons.push_pin : Icons.push_pin_outlined),
+        onTap: () => ref.read(profilesNotifierProvider.notifier).togglePin(profile),
+      ),
+      if (profile case RemoteProfileEntity())
+        AdaptiveMenuItem(
+          title: t.common.update,
+          leadingIcon: const Icon(Icons.sync_rounded),
+          onTap: () {
+            if (ref.read(updateProfileNotifierProvider(profile.id)).isLoading) {
+              return;
+            }
+            ref.read(updateProfileNotifierProvider(profile.id).notifier).updateProfile(profile as RemoteProfileEntity);
+          },
+        ),
+      AdaptiveMenuItem(
+        title: t.common.share,
+        leadingIcon: Icon(AdaptiveIcon(context).share),
+        subItems: [
+          if (profile case RemoteProfileEntity(:final url, :final name)) ...[
+            AdaptiveMenuItem(
+              title: t.pages.profiles.share.urlToClipboard,
+              onTap: () async {
+                final link = LinkParser.generateSubShareLink(url, name);
+                if (link.isNotEmpty) {
+                  await Clipboard.setData(ClipboardData(text: link));
+                  if (context.mounted) {
+                    ref
+                        .read(inAppNotificationControllerProvider)
+                        .showSuccessToast(t.common.msg.export.clipboard.success);
+                  }
+                }
+              },
+            ),
+            AdaptiveMenuItem(
+              title: t.pages.profiles.share.showUrlQr,
+              onTap: () async {
+                final link = LinkParser.generateSubShareLink(url, name);
+                if (link.isNotEmpty) {
+                  await ref.read(dialogNotifierProvider.notifier).showQrCode(link, title: name);
+                }
+              },
+            ),
+          ],
+          AdaptiveMenuItem(
+            title: t.pages.profiles.share.jsonToClipboard,
+            onTap: () async => await ref.read(profilesNotifierProvider.notifier).exportConfigToClipboard(profile),
+          ),
+        ],
+      ),
+      AdaptiveMenuItem(
+        leadingIcon: const Icon(Icons.edit_rounded),
+        title: t.common.edit,
+        onTap: () {
+          if (Breakpoint(context).isMobile()) context.pop();
+          context.goNamed('profileDetails', pathParameters: {'id': profile.id});
+        },
+      ),
+      AdaptiveMenuItem(
+        leadingIcon: const Icon(Icons.delete_outline_rounded),
+        title: t.common.delete,
+        onTap: () async => await ref
+            .read(dialogNotifierProvider.notifier)
+            .showConfirmation(
+              title: t.dialogs.confirmation.profile.delete.title,
+              message: t.dialogs.confirmation.profile.delete.msg,
+            )
+            .then((deleteConfirmed) async {
+              if (!deleteConfirmed) return;
+              await ref.read(profilesNotifierProvider.notifier).deleteProfile(profile);
+            }),
+      ),
+    ];
+
+    return AdaptiveMenu(builder: builder, items: menuItems, child: child);
+  }
+}
+
+/// Provider links from the `profile-web-page-url` / `support-url` subscription
+/// headers, rendered as a single full-width pill below the main card.
+///
+/// One link fills the row as a static chip. Two links share the slot and
+/// swap every few seconds: the current chip slides fully up and out, then
+/// the next slides down from the top into place.
+class ProfileLinkButtons extends HookConsumerWidget {
+  const ProfileLinkButtons({super.key, this.webPageUrl, this.supportUrl});
+
+  final String? webPageUrl;
+  final String? supportUrl;
+
+  /// Top-line label:
+  /// - Telegram (`t.me` / `telegram.me`): the path after the host, which covers
+  ///   every form — `hiddify`, `c/2681822178/1`, `joinchat/xxx`, `+xxx`.
+  /// - GitHub: the provider (repo owner) — e.g. `barry-far`.
+  /// - anything else: the domain.
+  static String _value(String url) {
+    final uri = Uri.parse(url);
+    final host = uri.host.startsWith("www.") ? uri.host.substring(4) : uri.host;
+    final segments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
+
+    if (const ["t.me", "telegram.me"].contains(host)) {
+      return segments.isEmpty ? host : segments.join("/");
+    }
+    if (host == "github.com" && segments.isNotEmpty) {
+      return segments.first;
+    }
+    return host;
+  }
+
+
+## nav_bar.dart
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/model/constants.dart';
+import 'package:hiddify/core/router/dialog/dialog_notifier.dart';
+import 'package:hiddify/features/profile/notifier/profile_notifier.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class NavBar extends ConsumerWidget {
+  const NavBar({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final t = ref.watch(translationsProvider).requireValue;
+    final freeSwitch = ref.watch(freeSwitchNotifierProvider);
+
+    final textColor = theme.colorScheme.onSurface;
+    return Padding(
+      padding: const EdgeInsets.all(
+        AddProfileModalConst.navBarGap,
+      ).copyWith(bottom: AddProfileModalConst.navBarBottomGap),
+      child: Row(
+        children: [
+          Row(
+            key: const ValueKey('free'),
+            children: [
+              Text(t.common.free, style: theme.textTheme.titleMedium!.copyWith(color: textColor)),
+              const Gap(8),
+              Switch(value: freeSwitch, onChanged: ref.read(freeSwitchNotifierProvider.notifier).onChange),
+            ],
+          ),
+          const Spacer(),
+          ActionChip(
+            key: const ValueKey("help"),
+            label: Text(t.common.help, style: theme.textTheme.labelLarge!.copyWith(color: textColor)),
+            avatar: Icon(Icons.help_outline, color: theme.colorScheme.onSurfaceVariant),
+            onPressed: () async => await ref.read(dialogNotifierProvider.notifier).showNoActiveProfile(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+## profile_notifier.dart lines 150-260
+    return const AsyncData(null);
+  }
+
+  ProfileRepository get _profilesRepo => ref.read(profileRepositoryProvider).requireValue;
+
+  Future<void> updateProfile(RemoteProfileEntity profile, {bool isBulk = false}) async {
+    if (state.isLoading) return;
+    _resetTimer?.cancel();
+    state = const AsyncLoading();
+    if (!isBulk) await ref.read(hapticServiceProvider.notifier).lightImpact();
+    state = await AsyncValue.guard(() async {
+      return await _profilesRepo
+          .upsertRemote(profile.url)
+          .match(
+            (err) {
+              loggy.warning("failed to update profile", err);
+              throw err;
+            },
+            (_) async {
+              loggy.info('successfully updated profile');
+
+              await ref.read(activeProfileProvider.future).then((active) async {
+                if (active != null && active.id == profile.id) {
+                  await ref.read(connectionNotifierProvider.notifier).reconnect(profile);
+                }
+              });
+              return unit;
+            },
+          )
+          .run();
+    });
+
+    // Single, user-initiated updates report failure via a dialog; success is
+    // shown inline by the button indicator. Bulk runs stay silent here and are
+    // summarized in one aggregate toast by ForegroundProfilesUpdateNotifier.
+    if (state case AsyncError(:final error) when !isBulk) {
+      final t = ref.read(translationsProvider).requireValue;
+      ref
+          .read(dialogNotifierProvider.notifier)
+          .showCustomAlertFromErr(t.presentError(error, action: t.pages.profiles.msg.update.failure));
+    }
+
+    // Hold the success/failure result for 2s so the leading can flash an icon,
+    // then reset to idle. Kept in the provider (not widget state) so it survives
+    // the profile list re-sorting that happens right after an update.
+    _resetTimer?.cancel();
+    _resetTimer = Timer(const Duration(seconds: 2), () => state = const AsyncData(null));
+  }
+}
+
+@riverpod
+class FreeSwitchNotifier extends _$FreeSwitchNotifier {
+  @override
+  bool build() {
+    return false;
+  }
+
+  Future<void> onChange(bool value) async => state = value;
+}
+
+@riverpod
+class AddProfilePageNotifier extends _$AddProfilePageNotifier {
+  @override
+  AddProfilePages build() => AddProfilePages.options;
+
+  void goOptions() => state = AddProfilePages.options;
+  void goManual() => state = AddProfilePages.manual;
+}
+
+enum AddProfilePages { options, manual }
+
+@riverpod
+class FreeProfilesNotifier extends _$FreeProfilesNotifier {
+  @override
+  Future<List<FreeProfile>> build() async {
+    final httpClient = ref.watch(httpClientProvider);
+    final res = await httpClient.get(
+      'https://raw.githubusercontent.com/hiddify/hiddify-app/refs/heads/main/test.configs/free_configs',
+    );
+    if (res.statusCode == 200) {
+      return FreeProfilesModel.fromJson(jsonDecode(res.data.toString()) as Map<String, dynamic>).profiles;
+    }
+    return <FreeProfile>[];
+  }
+}
+
+@riverpod
+Future<List<FreeProfile>> freeProfilesFilteredByRegion(Ref ref) async {
+  final freeProfiles = await ref.watch(freeProfilesNotifierProvider.future);
+  final region = ref.watch(ConfigOptions.region);
+  return freeProfiles.where((e) => e.region.contains(region.name) || e.region.isEmpty).toList();
+}
+
+## profile_repository.dart
+import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:hiddify/core/db/db.dart';
+
+import 'package:hiddify/core/utils/exception_handler.dart';
+import 'package:hiddify/features/profile/data/profile_data_mapper.dart';
+import 'package:hiddify/features/profile/data/profile_data_source.dart';
+import 'package:hiddify/features/profile/data/profile_parser.dart';
+import 'package:hiddify/features/profile/data/profile_path_resolver.dart';
+import 'package:hiddify/features/profile/model/profile_entity.dart';
+import 'package:hiddify/features/profile/model/profile_failure.dart';
+import 'package:hiddify/features/profile/model/profile_sort_enum.dart';
+import 'package:hiddify/features/settings/data/config_option_repository.dart';
+import 'package:hiddify/hiddifycore/hiddify_core_service.dart';
+import 'package:hiddify/utils/custom_loggers.dart';
+import 'package:uuid/uuid.dart';
+
+abstract interface class ProfileRepository {
+  TaskEither<ProfileFailure, Unit> init();
+  TaskEither<ProfileFailure, ProfileEntity?> getById(String id);
+  TaskEither<ProfileFailure, Unit> setAsActive(String id);
+  TaskEither<ProfileFailure, Unit> setPinned(String id, bool pinned);
+  TaskEither<ProfileFailure, Unit> deleteById(String id, bool isActive);
+  Stream<Either<ProfileFailure, ProfileEntity?>> watchActiveProfile();
+  Stream<Either<ProfileFailure, bool>> watchHasAnyProfile();
+  Stream<Either<ProfileFailure, List<ProfileEntity>>> watchAll({
+    ProfilesSort sort = ProfilesSort.lastUpdate,
+    SortMode sortMode = SortMode.ascending,
+  });
+  TaskEither<ProfileFailure, Unit> upsertRemote(String url, {UserOverride? userOverride, CancelToken? cancelToken});
+  TaskEither<ProfileFailure, Unit> addLocal(String content, {UserOverride? userOverride});
+  TaskEither<ProfileFailure, Unit> offlineUpdate(ProfileEntity nProfile, String nContent);
+  TaskEither<ProfileFailure, Unit> validateConfig(String path, String tempPath, String? profileOverride, bool debug);
+  TaskEither<ProfileFailure, String> generateConfig(String id);
+  TaskEither<ProfileFailure, String> getRawConfig(String id);
+}
+
+class ProfileRepositoryImpl with ExceptionHandler, InfraLogger implements ProfileRepository {
+  ProfileRepositoryImpl({
+    required ProfileDataSource profileDataSource,
+    required ProfilePathResolver profilePathResolver,
+    required HiddifyCoreService singbox,
+    required ConfigOptionRepository configOptionRepository,
+    required ProfileParser profileParser,
+  }) : _profileParser = profileParser,
+       _configOptionRepo = configOptionRepository,
+       _singbox = singbox,
+       _profilePathResolver = profilePathResolver,
+       _profileDataSource = profileDataSource;
+
+  final ProfileDataSource _profileDataSource;
+  final ProfilePathResolver _profilePathResolver;
+  final HiddifyCoreService _singbox;
+  final ConfigOptionRepository _configOptionRepo;
+  final ProfileParser _profileParser;
+
+  @override
+  TaskEither<ProfileFailure, Unit> init() {
+    return exceptionHandler(() async {
+      if (!kIsWeb) {
+        if (!await _profilePathResolver.directory.exists()) {
+          await _profilePathResolver.directory.create(recursive: true);
+        }
+      }
+
+      return right(unit);
+    }, ProfileUnexpectedFailure.new);
+  }
+
+## home_page.dart
+import 'package:dartx/dartx.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:hiddify/core/app_info/app_info_provider.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/router/bottom_sheets/bottom_sheets_notifier.dart';
+import 'package:hiddify/features/home/widget/connection_button.dart';
+import 'package:hiddify/features/profile/notifier/active_profile_notifier.dart';
+import 'package:hiddify/features/profile/widget/profile_tile.dart';
+import 'package:hiddify/features/proxy/active/active_proxy_card.dart';
+import 'package:hiddify/features/proxy/active/active_proxy_delay_indicator.dart';
+import 'package:hiddify/gen/assets.gen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+
+class HomePage extends HookConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final t = ref.watch(translationsProvider).requireValue;
+    // final hasAnyProfile = ref.watch(hasAnyProfileProvider);
+    final activeProfile = ref.watch(activeProfileProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        // leading: (RootScaffold.stateKey.currentState?.hasDrawer ?? false) && showDrawerButton(context)
+        //     ? DrawerButton(
+        //         onPressed: () {
+        //           RootScaffold.stateKey.currentState?.openDrawer();
+        //         },
+        //       )
+        //     : null,
+        title: Row(
+          children: [
+            Assets.images.logo.svg(height: 24),
+            const Gap(8),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: t.common.appTitle),
+                  const TextSpan(text: " "),
+                  const WidgetSpan(child: AppVersionLabel(), alignment: PlaceholderAlignment.middle),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          // IconButton(
+          //     onPressed: () => const QuickSettingsRoute().push(context),
+          //     icon: const Icon(FluentIcons.options_24_filled),
+          //     material: (context, platform) => MaterialIconButtonData(
+          //           tooltip: t.config.quickSettings,
+          //         )),
+          // IconButton(
+          //     onPressed: () => const AddProfileRoute().push(context),
+          //     icon: const Icon(FluentIcons.add_circle_24_filled),
+          //     material: (context, platform) => MaterialIconButtonData(
+          //           tooltip: t.profile.add.buttonText,
+          //         )),
+          Semantics(
+            key: const ValueKey("profile_add_button"),
+            label: t.pages.profiles.add,
+            child: IconButton(
+              icon: Icon(Icons.add_rounded, color: theme.colorScheme.primary),
+              onPressed: () => ref.read(bottomSheetsNotifierProvider.notifier).showAddProfile(),
+            ),
+          ),
+          const Gap(8),
+        ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          // A sky behind the connect button, as at an eclipse: in dark mode a touch lighter round
+          // the button, fading to the theme's own dark; in light mode brightest there, a touch
+          // darker towards the edges. Both barely there, centred on where the button sits.
+          gradient: theme.brightness == Brightness.dark
+              ? RadialGradient(
+                  center: const Alignment(0, -.15),
+                  radius: .85,
+                  colors: [
+                    Colors.white.withValues(alpha: .045),
+                    Colors.white.withValues(alpha: .015),
+                    Colors.white.withValues(alpha: 0),
+                  ],
+                  stops: const [0, .45, 1],
+                )
+              : RadialGradient(
+                  center: const Alignment(0, -.15),
+                  radius: 1.1,
+                  colors: [
+                    Colors.white.withValues(alpha: .55),
+                    Colors.white.withValues(alpha: 0),
+                    Colors.black.withValues(alpha: .045),
+                  ],
+                  stops: const [0, .5, 1],
+                ),
+          image: DecorationImage(
+            image: const AssetImage('assets/images/world_map.png'), // Replace with your image path
+            fit: BoxFit.cover,
+            opacity: 0.09,
+            colorFilter: theme.brightness == Brightness.dark
+                ? ColorFilter.mode(Colors.white.withValues(alpha: .15), BlendMode.srcIn) //
+                : ColorFilter.mode(
+                    Colors.grey.withValues(alpha: 1),
+                    BlendMode.srcATop,
+                  ), // Apply white tint in dark mode
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 600, // Set the maximum width here
+                ),
+                child: CustomScrollView(
+                  slivers: [
+                    // switch (activeProfile) {
+                    // AsyncData(value: final profile?) =>
+                    MultiSliver(
+                      children: [
+                        // const Gap(100),
+                        switch (activeProfile) {
+                          AsyncData(value: final profile?) => ProfileTile(
+                            profile: profile,
+                            isMain: true,
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          ),
+                          _ => const Text(""),
+                        },
+                        const SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [ConnectionButton(), ActiveProxyDelayIndicator()],
+                                ),
+                              ),
+                              ActiveProxyFooter(),
+                              Gap(32),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // AsyncData() => switch (hasAnyProfile) {
+                    //     AsyncData(value: true) => const EmptyActiveProfileHomeBody(),
+                    //     _ => const EmptyProfilesHomeBody(),
+                    //   },
+                    // AsyncError(:final error) => SliverErrorBodyPlaceholder(t.presentShortError(error)),
+                    // _ => const SliverToBoxAdapter(),
+                    // },
+                  ],
+                ),
+              ),
+            ),
+            if (ref.watch(hasAnyProfileProvider).value ?? false)
+              Positioned(
+                right: 0,
+                left: 0,
+                bottom: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Material(
+                      color: theme.colorScheme.primaryContainer,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                      child: InkWell(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                        onTap: () => ref.read(bottomSheetsNotifierProvider.notifier).showQuickSettings(),
+                        child: Container(
+                          height: 32,
+                          padding: const EdgeInsetsDirectional.only(start: 16, end: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(t.pages.home.quickSettings),
+                              const Gap(4),
+                              const Icon(Icons.arrow_drop_up_rounded, size: 16),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+## app root files
+## FILE lib/features/app/widget/app.dart
+import 'package:accessibility_tools/accessibility_tools.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hiddify/core/localization/locale_extensions.dart';
+import 'package:hiddify/core/localization/locale_preferences.dart';
+import 'package:hiddify/core/localization/translations.dart';
+import 'package:hiddify/core/model/constants.dart';
+import 'package:hiddify/core/notification/in_app_notification_controller.dart';
+import 'package:hiddify/core/router/go_router/go_router_notifier.dart';
+import 'package:hiddify/core/router/go_router/helper/active_breakpoint_notifier.dart';
+import 'package:hiddify/core/theme/app_theme.dart';
+import 'package:hiddify/core/theme/theme_preferences.dart';
+import 'package:hiddify/features/app_based_routing/overview/app_based_routing_notifier.dart';
+import 'package:hiddify/features/app_update/notifier/app_update_notifier.dart';
+import 'package:hiddify/features/connection/widget/connection_wrapper.dart';
+import 'package:hiddify/features/profile/notifier/profiles_update_notifier.dart';
+import 'package:hiddify/features/shortcut/shortcut_wrapper.dart';
+import 'package:hiddify/features/system_tray/notifier/system_tray_notifier.dart';
+import 'package:hiddify/features/window/widget/window_wrapper.dart';
+import 'package:hiddify/hiddifycore/hiddify_core_service_provider.dart';
+import 'package:hiddify/utils/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:upgrader/upgrader.dart';
+
+bool _debugAccessibility = false;
+bool isOnPauseCalled = false;
+
+class App extends HookConsumerWidget with WidgetsBindingObserver, PresLogger {
+  const App({super.key});
+
+  void onPause(WidgetRef ref) {
+    if (PlatformUtils.isDesktop) return;
+    isOnPauseCalled = true;
+    ref.read(hiddifyCoreServiceProvider).closeFront();
+  }
+
+  void onResume(WidgetRef ref) {
+    // if (PlatformUtils.isDesktop) return;
+    ref.read(hiddifyCoreServiceProvider).init();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isOnPauseCalled && PlatformUtils.isAndroid) ref.invalidate(appBasedRoutingProvider);
+      isOnPauseCalled = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    setupStateListener(ref);
+    final router = ref.watch(goRouterNotiferProvider);
+    final locale = ref.watch(localePreferencesProvider);
+    final themeMode = ref.watch(themePreferencesProvider);
+    final theme = AppTheme(themeMode, locale.preferredFontFamily);
+    final upgrader = ref.watch(upgraderProvider);
+    final activeBreakpoint = Breakpoint(context).activeBreakpoint;
+
+    ref.listen(foregroundProfilesUpdateNotifierProvider, (_, _) {});
+    if (PlatformUtils.isAndroid) ref.listen(appBasedRoutingProvider, (_, _) {});
+    if (PlatformUtils.isDesktop) ref.listen(systemTrayNotifierProvider, (_, _) {});
+
+    // updating ActiveBreakpointNotifier value
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(activeBreakpointNotifierProvider.notifier).update(activeBreakpoint);
+      });
+      return null;
+    }, [activeBreakpoint]);
+    return WindowWrapper(
+      ShortcutWrapper(
+        ConnectionWrapper(
+          DynamicColorBuilder(
+            builder: (ColorScheme? lightColorScheme, ColorScheme? darkColorScheme) {
+              return MaterialApp.router(
+                routerConfig: router,
+                scaffoldMessengerKey: appScaffoldMessengerKey,
+                locale: locale.flutterLocale,
+                supportedLocales: AppLocaleUtils.supportedLocales,
+                localizationsDelegates: GlobalMaterialLocalizations.delegates,
+                debugShowCheckedModeBanner: false,
+                themeMode: themeMode.flutterThemeMode,
+                theme: theme.lightTheme(lightColorScheme),
+                darkTheme: theme.darkTheme(darkColorScheme),
+                title: Constants.appName,
+                builder: (context, child) {
+                  final theme = Theme.of(context);
+                  child = SnackBarHost(
+                    child: UpgradeAlert(
+                      upgrader: upgrader,
+                      navigatorKey: router.routerDelegate.navigatorKey,
+                      child: child ?? const SizedBox(),
+                    ),
+                  );
+                  if (kDebugMode && _debugAccessibility) {
+                    return AccessibilityTools(checkFontOverflows: true, child: child);
+                  }
+                  return AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: SystemUiOverlayStyle(
+                      statusBarColor: theme.scaffoldBackgroundColor,
+                      systemNavigationBarColor: theme.scaffoldBackgroundColor,
+                      systemNavigationBarIconBrightness: theme.brightness == Brightness.dark
+                          ? Brightness.light
+                          : Brightness.dark,
+                    ),
+                    child: child,
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // @override
+  // Widget build1(BuildContext context, WidgetRef ref) {
+  //   setupStateListener(ref);
+  //   // setupQuickSettings(ref);
+  //   final router = ref.watch(routerProvider);
+  //   final locale = ref.watch(localePreferencesProvider);
+  //   final themeMode = ref.watch(themePreferencesProvider);
+  //   final theme = AppTheme(themeMode, locale.preferredFontFamily);
+  //   final upgrader = ref.watch(upgraderProvider);
+
+  //   ref.listen(foregroundProfilesUpdateNotifierProvider, (_, __) {});
+
+  //   return WindowWrapper(
+  //     TrayWrapper(
+  //       ShortcutWrapper(
+  //         ConnectionWrapper(
+  //           PlatformProvider(
+  //               settings: PlatformSettingsData(
+  //                 iosUsesMaterialWidgets: true,
+  //               ),
+  //               builder: (context) => DynamicColorBuilder(
+  //                     builder: (ColorScheme? lightColorScheme, ColorScheme? darkColorScheme) {
+  //                       return PlatformApp.router(
+  //                         routerConfig: router,
+  //                         locale: locale.flutterLocale,
+  //                         supportedLocales: AppLocaleUtils.supportedLocales,
+  //                         localizationsDelegates: GlobalMaterialLocalizations.delegates,
+  //                         debugShowCheckedModeBanner: false,
+  //                         material: (context, platform) => MaterialAppRouterData(
+  //                           theme: theme.lightTheme(lightColorScheme),
+  //                           darkTheme: theme.darkTheme(darkColorScheme),
+  //                           themeMode: themeMode.flutterThemeMode,
+  //                         ),
+  //                         cupertino: (context, platform) {
+  //                           final sysDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
+  //                           return CupertinoAppRouterData(theme: theme.cupertinoThemeData(sysDark, lightColorScheme, darkColorScheme));
+  //                         },
+  //                         title: Constants.appName,
+  //                         builder: (context, child) {
+  //                           child = UpgradeAlert(
+  //                             upgrader: upgrader,
+
+## pubspec dependencies
+  flutter_animate: ^4.5.0
+  flutter_svg: ^2.0.10+1
+  gap: ^3.0.1
+  # percent_indicator_premium: ^0.0.2
+  sliver_tools: ^0.2.12
+  font_awesome_flutter: ^10.7.0
+  upgrader: ^11.3.0
+  version: ^3.0.2
+  qr_flutter: ^4.1.0
+  flutter_displaymode: ^0.6.0
+  dio_smart_retry: ^7.0.1
+  cupertino_http: ^2.0.1
+  dart_mappable: ^4.2.1
+  fluentui_system_icons: ^1.1.229
+  json_path: ^0.7.1
+  # permission_handler: ^11.3.0 # is not compatible with windows
+  #flutter_easy_permission: ^1.1.2
+  # flutter_easy_permission:
+  #   git: https://github.com/MichaelStH/flutter_easy_permission.git
+  in_app_review: ^2.0.10
+  # circle_flags: ^4.0.2
+  circle_flags:
+    git: https://github.com/hiddify-com/flutter_circle_flags.git
+  fixnum: ^1.1.0
+  # # for using protobuf install protoc from this link -> https://github.com/protocolbuffers/protobuf/releases
+  # # then add path to "environment variable" e.g. -> C:\src\protoc-28.3-win64\bin
+  # # then active "protoc_plugin" by running this command -> dart pub global activate protoc_plugin
+  # # then add path to "environment variable" e.g. -> C:\Users\%USERPROFILE%\AppData\Local\Pub\Cache\global_packages\protoc_plugin\bin
+  protobuf: ^5.0.0
+  grpc: ^4.0.1
+  dynamic_color: ^1.7.0
+  flutter_typeahead: ^5.0.1
+  # flutter_platform_widgets: ^7.0.1
+  simple_icons: ^10.1.3
+  basic_utils: ^5.7.0
+  text_scroll: ^0.2.0
+  flutter_markdown_plus: ^1.0.6
+  # platform-specific  settings
+  # https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup
+  file_picker: ^8.1.7
+  # Used for reading the .zip files picked in the profile file import
+  archive: ^4.0.4
+  installed_apps: # ^1.5.2
+    git: https://github.com/VB10/installed_apps
+
+  # change case of text
+  # for example camelCase to snake_case
+  # helloWorld -> hello_worlds
+  recase: ^4.1.0
+  # Used for managing deep links on desktop platforms
+  # platform-specific settings
+  # https://github.com/llfbandit/app_links/tree/master/doc
+  app_links: ^6.4.0
+  # Used for registering custom schemes in the Windows registry
+  win32: ^5.12.0
+  humanizer: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lint: ^2.3.0
+  build_web_compilers: ^4.0.11
+  build_runner: ^2.4.13
+  json_serializable: ^6.7.1
+  freezed: ^2.4.7
+  riverpod_generator: ^2.4.3
+  drift_dev: ^2.21.0
+  ffigen: ^19.1.0
+  slang_build_runner: ^4.4.0
